@@ -15,7 +15,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
     private final MemberRepository memberRepository;
 
-    MemberJoinResDTO registerMember(MemberJoinReqDTO dto){
+    public MemberJoinResDTO registerMember(MemberJoinReqDTO dto){
 
         if (memberRepository.existsByEmail(dto.email()))
             throw new RuntimeException("Email already exists");
