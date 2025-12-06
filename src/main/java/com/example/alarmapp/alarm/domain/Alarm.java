@@ -15,6 +15,7 @@ import java.time.LocalTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name="alarms")
 @Builder
 public class Alarm {
 
