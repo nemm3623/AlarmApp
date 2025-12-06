@@ -1,4 +1,4 @@
-package com.example.alarmapp.alarm.dto;
+package com.example.alarmapp.alarm.dto.req;
 
 import com.example.alarmapp.alarm.enums.AlarmType;
 import com.example.alarmapp.alarm.enums.Repeat;
