@@ -20,6 +20,7 @@ import java.util.List;
  * - GroupedOpenApi Beans: API를 기능/도메인별로 그룹화합니다.
  */
 @Profile("!prod")
+
 @Configuration
 public class SwaggerConfig {
 
