@@ -1,16 +1,16 @@
-package com.example.alarmapp.alarm.dto.req;
+package com.example.alarmapp.alarm.dto.res;
 
 import com.example.alarmapp.alarm.enums.AlarmType;
 import com.example.alarmapp.alarm.enums.Repeat;
 import com.example.alarmapp.alarm.enums.Weekday;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Builder;
 
 import java.time.LocalTime;
 import java.util.List;
 
 @Builder
-public record CreateAlarmReqDTO (
+public record AlarmResDTO (
+        Long id,
 
         String title,
         AlarmType type,
@@ -28,5 +28,6 @@ public record CreateAlarmReqDTO (
         Boolean led,
 
         Integer snoozeMinutes // 이것도 null 가능성이 있으니 Integer 권장
+
 ){
 }
