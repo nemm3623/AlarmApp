@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
-//@CrossOrigin(origins = "*")  // 임시
+@CrossOrigin("*")
 public class MemberController {
 
     private final MemberCommandService memberCommandService;
@@ -26,7 +26,9 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<MemberLoginResDTO> login(@RequestBody MemberLoginReqDTO dto) {
+        System.out.println("📌 LOGIN REQUEST RECEIVED: " + dto.email());
         return ResponseEntity.ok(memberQueryService.login(dto));
     }
+
 
 }
