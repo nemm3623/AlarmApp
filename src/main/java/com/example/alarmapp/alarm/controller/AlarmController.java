@@ -1,15 +1,15 @@
 package com.example.alarmapp.alarm.controller;
 
-import com.example.alarmapp.alarm.dto.res.DeleteAlarmResDTO;
+
 import com.example.alarmapp.alarm.dto.req.CreateAlarmReqDTO;
 import com.example.alarmapp.alarm.dto.req.UpdateAlarmReqDTO;
 import com.example.alarmapp.alarm.dto.res.AlarmResDTO;
-import com.example.alarmapp.alarm.dto.res.CreateAlarmResDTO;
-import com.example.alarmapp.alarm.dto.res.UpdateAlarmResDTO;
 import com.example.alarmapp.alarm.service.AlarmCommandService;
 import com.example.alarmapp.alarm.service.AlarmQueryService;
+import com.example.alarmapp.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,8 +23,9 @@ public class AlarmController {
     private final AlarmQueryService alarmQueryService;
 
     @GetMapping
-    public ResponseEntity<List<AlarmResDTO>> getAllAlarms() {
-        return ResponseEntity.ok(alarmQueryService.allAlarms());
+    public ResponseEntity<List<AlarmResDTO>> getAllAlarms(Authentication authentication) {
+        Member member = (Member) authentication.getPrincipal();
+        return ResponseEntity.ok(alarmQueryService.allAlarms(member));
     }
 
     @GetMapping("/{id}")
@@ -33,13 +34,14 @@ public class AlarmController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<CreateAlarmResDTO> createAlarm( @RequestBody CreateAlarmReqDTO dto) {
-
-        return ResponseEntity.ok(alarmCommandService.createAlarm(dto));
+    public ResponseEntity<AlarmResDTO> createAlarm( Authentication authentication,
+                                                    @RequestBody CreateAlarmReqDTO dto) {
+        Member member = (Member) authentication.getPrincipal();
+        return ResponseEntity.ok(alarmCommandService.createAlarm(dto, member));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<UpdateAlarmResDTO> updateAlarm(@PathVariable Long id, @RequestBody UpdateAlarmReqDTO dto) {
+    public ResponseEntity<AlarmResDTO> updateAlarm(@PathVariable Long id, @RequestBody UpdateAlarmReqDTO dto) {
 
         return ResponseEntity.ok(alarmCommandService.updateAlarm(id, dto));
     }

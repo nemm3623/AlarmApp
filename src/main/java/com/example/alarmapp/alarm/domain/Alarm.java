@@ -4,6 +4,7 @@ import com.example.alarmapp.alarm.dto.req.UpdateAlarmReqDTO;
 import com.example.alarmapp.alarm.enums.AlarmType;
 import com.example.alarmapp.alarm.enums.Repeat;
 import com.example.alarmapp.alarm.enums.Weekday;
+import com.example.alarmapp.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,6 +47,9 @@ public class Alarm {
     private boolean vibration;
     private boolean led;
     private int snoozeMinutes;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
 
 
     public void updateAlarm(UpdateAlarmReqDTO dto) {

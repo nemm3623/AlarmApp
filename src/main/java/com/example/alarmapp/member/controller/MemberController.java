@@ -1,13 +1,14 @@
 package com.example.alarmapp.member.controller;
 
-import com.example.alarmapp.member.dto.req.MemberJoinReqDTO;
-import com.example.alarmapp.member.dto.req.MemberLoginReqDTO;
-import com.example.alarmapp.member.dto.res.MemberJoinResDTO;
-import com.example.alarmapp.member.dto.res.MemberLoginResDTO;
+import com.example.alarmapp.member.domain.Member;
+import com.example.alarmapp.member.dto.req.NaverLoginReqDTO;
+import com.example.alarmapp.member.dto.req.UpdateTokenReq;
+import com.example.alarmapp.member.dto.res.AuthResponse;
 import com.example.alarmapp.member.service.MemberCommandService;
 import com.example.alarmapp.member.service.MemberQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,16 +20,22 @@ public class MemberController {
     private final MemberCommandService memberCommandService;
     private final MemberQueryService memberQueryService;
 
-    @PostMapping("/register")
-    public ResponseEntity<MemberJoinResDTO> signUp(@RequestBody MemberJoinReqDTO dto) {
-        return ResponseEntity.ok(memberCommandService.registerMember(dto));
+
+    @PostMapping("/auth/naver")
+    public ResponseEntity<AuthResponse> login(@RequestBody NaverLoginReqDTO dto) {
+
+        return ResponseEntity.ok(memberQueryService.handleNaverLogin(
+                memberQueryService.validateNaverToken(dto)));
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<MemberLoginResDTO> login(@RequestBody MemberLoginReqDTO dto) {
-        System.out.println("📌 LOGIN REQUEST RECEIVED: " + dto.email());
-        return ResponseEntity.ok(memberQueryService.login(dto));
+    @PostMapping("/token")
+    public ResponseEntity<Void> updateToken(Authentication authentication, @RequestBody UpdateTokenReq req) {
+        Member member = (Member) authentication.getPrincipal();
+
+        memberCommandService.updateToken(member, req.token());
+        return ResponseEntity.noContent().build();
     }
+
 
 
 }

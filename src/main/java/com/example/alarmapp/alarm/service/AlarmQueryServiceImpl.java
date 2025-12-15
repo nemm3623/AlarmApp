@@ -3,8 +3,8 @@ package com.example.alarmapp.alarm.service;
 import com.example.alarmapp.alarm.domain.Alarm;
 import com.example.alarmapp.alarm.dto.res.AlarmResDTO;
 import com.example.alarmapp.alarm.repository.AlarmRepository;
+import com.example.alarmapp.member.domain.Member;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,25 +20,11 @@ public class AlarmQueryServiceImpl implements AlarmQueryService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<AlarmResDTO> allAlarms() {
-        List<Alarm> alarms = alarmRepository.findAll();
+    public List<AlarmResDTO> allAlarms(Member member) {
+        List<Alarm> alarms = alarmRepository.findByMember(member);
         List<AlarmResDTO> alarmResDTOs = new ArrayList<>();
         for (Alarm alarm : alarms) {
-            alarmResDTOs.add(AlarmResDTO.builder()
-                    .id(alarm.getId())
-                    .title(alarm.getTitle())
-                    .type(alarm.getType())
-                    .repeat(alarm.getRepeat())
-                    .weekdays(alarm.getWeekdays())
-                    .startTime(alarm.getStartTime())
-                    .monthdays(alarm.getMonthdays())
-                    .endTime(alarm.getEndTime())
-                    .priority(alarm.getPriority())
-                    .sound(alarm.isSound())
-                    .vibration(alarm.isVibration())
-                    .led(alarm.isLed())
-                    .snoozeMinutes(alarm.getSnoozeMinutes())
-                    .build());
+            alarmResDTOs.add(AlarmResDTO.from(alarm));
         }
         return alarmResDTOs;
     }
@@ -51,21 +37,7 @@ public class AlarmQueryServiceImpl implements AlarmQueryService {
         if (alarm == null)
             throw new IllegalArgumentException("Alarm not found");
 
-        return AlarmResDTO.builder()
-                .id(alarm.getId())
-                .title(alarm.getTitle())
-                .type(alarm.getType())
-                .repeat(alarm.getRepeat())
-                .weekdays(alarm.getWeekdays())
-                .startTime(alarm.getStartTime())
-                .monthdays(alarm.getMonthdays())
-                .endTime(alarm.getEndTime())
-                .priority(alarm.getPriority())
-                .sound(alarm.isSound())
-                .vibration(alarm.isVibration())
-                .led(alarm.isLed())
-                .snoozeMinutes(alarm.getSnoozeMinutes())
-                .build();
+        return AlarmResDTO.from(alarm);
 
     }
 }
