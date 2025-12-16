@@ -37,4 +37,8 @@ out/
 ### VS Code ###
 .vscode/
 
+
+## FireBase
 firebase-service-key.json
+
+
