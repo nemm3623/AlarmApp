@@ -6,11 +6,9 @@ import com.example.alarmapp.alarm.enums.Repeat;
 import com.example.alarmapp.alarm.enums.Weekday;
 import com.example.alarmapp.member.domain.Member;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -18,8 +16,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="alarms")
 @Builder
+@Table(name = "alarms")
 public class Alarm {
 
     @Id
@@ -27,33 +25,58 @@ public class Alarm {
     private Long id;
 
     private String title;
+
+    @Enumerated(EnumType.STRING)
     private AlarmType type; // LOCAL, PUSH
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "repeat_type")
-    private Repeat repeat;
+    private Repeat repeat;  // DAILY, WEEKLY, MONTHLY, ONCE
 
+    /* ================== 반복 조건 ================== */
+
+    // WEEKLY
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "alarm_weekdays", joinColumns = @JoinColumn(name = "alarm_id"))
     @Enumerated(EnumType.STRING)
     private List<Weekday> weekdays;
 
+    // MONTHLY
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "alarm_monthdays", joinColumns = @JoinColumn(name = "alarm_id"))
     private List<Integer> monthdays;
 
-    private LocalTime startTime; // 선택 사항
-    private LocalTime endTime;   // 선택 사항
 
-    private int priority;   // 알람 중요 수치
+    private LocalTime startTime;
+    private LocalTime endTime;
+
+
+    private int priority;
     private boolean sound;
     private boolean vibration;
     private boolean led;
     private int snoozeMinutes;
 
+
+
+    private LocalDate lastTriggeredDate;
+
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
 
-    public void updateAlarm(UpdateAlarmReqDTO dto) {
+    public boolean isAlreadyTriggeredToday() {
+        return lastTriggeredDate != null &&
+                lastTriggeredDate.equals(LocalDate.now());
+    }
 
+    public void markTriggeredToday() {
+        this.lastTriggeredDate = LocalDate.now();
+    }
+
+    public void updateAlarm(UpdateAlarmReqDTO dto) {
         this.title = dto.title();
         this.type = dto.type();
         this.repeat = dto.repeat();
@@ -67,4 +90,9 @@ public class Alarm {
         this.led = dto.led();
         this.snoozeMinutes = dto.snoozeMinutes();
     }
+
+    public boolean isNoneAlarm() {
+        return this.repeat == Repeat.NONE;
+    }
+
 }

@@ -19,12 +19,13 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
 
 
 
-    @Query(""" 
-            SELECT a FROM Alarm a
-            WHERE a.type = :type AND a.startTime <= :now
-            AND a.startTime > :past
-            """ )
-            List<Alarm> findAlarmsToTrigger(
+    @Query("""
+        SELECT a FROM Alarm a
+        WHERE a.type = :type
+        AND a.startTime <= :now
+        AND a.startTime > :past
+    """)
+    List<Alarm> findAlarmsByTimeRange(
             @Param("type") AlarmType type,
             @Param("now") LocalTime now,
             @Param("past") LocalTime past

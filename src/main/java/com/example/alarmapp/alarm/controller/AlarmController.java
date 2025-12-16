@@ -37,6 +37,7 @@ public class AlarmController {
     public ResponseEntity<AlarmResDTO> createAlarm( Authentication authentication,
                                                     @RequestBody CreateAlarmReqDTO dto) {
         Member member = (Member) authentication.getPrincipal();
+        System.out.println(dto.repeat());
         return ResponseEntity.ok(alarmCommandService.createAlarm(dto, member));
     }
 

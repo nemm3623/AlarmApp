@@ -22,8 +22,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
 
 
-
-
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -32,7 +30,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         String token = resolveToken(request);
-        String requestURI = request.getRequestURI();
 
         if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
